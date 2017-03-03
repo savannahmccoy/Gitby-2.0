@@ -10,7 +10,7 @@ import UIKit
 import MBProgressHUD
 
 protocol SettingsPresentingViewControllerDelegate: class {
-    func didSaveSettings(settings: GithubRepoSearchSettings)
+    func didSaveSettings(sender: SearchSettingsViewController,settings: GithubRepoSearchSettings)
     func didCancelSettings()
 }
 
@@ -21,9 +21,9 @@ class RepoResultsViewController: UIViewController, UITableViewDataSource, UITabl
     
     @IBOutlet weak var tableView: UITableView!
     
-    
+    //weak var delegate: SettingsPresentingViewControllerDelegate?
     var searchBar: UISearchBar!
-    var searchSettings = GithubRepoSearchSettings()
+    var searchSettings = GithubRepoSearchSettings(searchString: nil, minStars: 0)
     var repos: [GithubRepo]!
 
     
@@ -112,7 +112,11 @@ class RepoResultsViewController: UIViewController, UITableViewDataSource, UITabl
         vc.delegate = self
     }
     
-    func didSaveSettings(settings: GithubRepoSearchSettings) {
+    func didSaveSettings(sender: SearchSettingsViewController, settings: GithubRepoSearchSettings) {
+        
+        self.searchSettings = settings
+        doSearch()
+        
         self.dismiss(animated: true, completion: nil)
         print("called save")
     }

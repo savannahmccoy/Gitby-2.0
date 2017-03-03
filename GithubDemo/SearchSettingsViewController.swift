@@ -17,12 +17,13 @@ class SearchSettingsViewController: UIViewController {
     
     weak var delegate: SettingsPresentingViewControllerDelegate?
     var settings: GithubRepoSearchSettings?
-    var numStars = 0
+    
+    //var numStars = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        starSlider.maximumValue = 5
+        starSlider.maximumValue = 100000
         starSlider.minimumValue = 1
         // Do any additional setup after loading the view.
     }
@@ -33,7 +34,13 @@ class SearchSettingsViewController: UIViewController {
     }
     
     @IBAction func saveButtonTapped(sender: UIBarButtonItem) {
-        self.delegate?.didSaveSettings(settings: settings!)
+        let searchSettings = GithubRepoSearchSettings.init(searchString: self.settings?.searchString, minStars: (self.settings?.minStars)!)
+        
+        delegate?.didSaveSettings(sender: self, settings: searchSettings)
+        
+        
+        
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func cancelButtonTapped(sender: UIBarButtonItem) {
@@ -41,9 +48,12 @@ class SearchSettingsViewController: UIViewController {
     }
     
     @IBAction func sliderValueDidChange(_ sender: UISlider) {
+        //var minStars = Int(starSlider.value)
+        var minStars = Int(starSlider.value)
+        settings = GithubRepoSearchSettings.init(searchString: self.settings?.searchString, minStars: minStars)
         print(Int(starSlider.value))
         starsCountLabel.text = String(Int(starSlider.value))
-        numStars = Int(starSlider.value)
+        minStars = Int(starSlider.value)
     }
    
 
